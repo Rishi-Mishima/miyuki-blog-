@@ -1,8 +1,8 @@
 ---
 import Header from "../components/Header.astro";
 import "../styles/global.css";
-interface Props { title?: string; description?: string; theme?: "light" | "dark"; showFooter?: boolean; }
-const { title = "Miyuki — Software, AI & Notes", description = "Miyuki 的个人研究与技术写作。", theme = "light", showFooter = true } = Astro.props;
+interface Props { title?: string; description?: string; theme?: "light" | "dark"; showFooter?: boolean; showHeader?: boolean; }
+const { title = "Miyuki — Software, AI & Notes", description = "Miyuki 的个人研究与技术写作。", theme = "light", showFooter = true, showHeader = true } = Astro.props;
 ---
 <!doctype html>
 <html lang="zh-CN">
@@ -17,7 +17,7 @@ const { title = "Miyuki — Software, AI & Notes", description = "Miyuki 的个�
   </head>
   <body>
     <div class="page-shell">
-      <Header theme={theme} />
+      {showHeader && <Header theme={theme} />}
       <main class="site-main"><slot /></main>
       {showFooter && <footer class="site-footer"><span>© {new Date().getFullYear()} Miyuki</span><span>Built with Astro · Amsterdam</span></footer>}
     </div>
