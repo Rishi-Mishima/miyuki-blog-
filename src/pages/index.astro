@@ -1,17 +1,133 @@
 ---
-
+import BaseLayout from "../layouts/BaseLayout.astro";
+const posts = Object.values(import.meta.glob("./posts/*.md", { eager: true }));
+const recentPosts = posts.sort((a: any, b: any) => new Date(b.frontmatter.pubDate).valueOf() - new Date(a.frontmatter.pubDate).valueOf()).slice(0, 3);
 ---
+<BaseLayout title="Miyuki — Ideas, Systems & Code" description="关于软件、AI 与生活系统的个人研究档案。" showFooter={false}>
+  <section class="hero">
+    <div class="hero-sky"></div>
+    <div class="hero-light"></div>
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>My Astro Site</h1>
-	</body>
-</html>
+    <aside class="now-panel" id="now">
+      <div>
+        <p class="eyebrow">01 / Now</p>
+        <p class="status"><span></span> Currently building</p>
+      </div>
+      <div class="project-block">
+        <span class="project-no">PROJECT 01</span>
+        <h2>构建我的<br />数字花园</h2>
+        <p>一个持续生长的个人知识库，用写作连接技术、观察与未完成的想法。</p>
+        <a class="text-link" href="/about/">了解更多</a>
+      </div>
+      <p class="coordinates">52.3676° N · 4.9041° E</p>
+    </aside>
+
+    <div class="identity">
+      <p class="issue">Independent notes · Issue 001</p>
+      <div class="portrait-wrap" aria-label="个人照片位置"><span>M</span></div>
+      <div class="statement">
+        <p>MIYUKI'S NOTEBOOK</p>
+        <h1>Ideas become<br /><em>clearer</em> in writing.</h1>
+        <div class="identity-meta"><span>SOFTWARE</span><i></i><span>AI</span><i></i><span>SYSTEMS</span></div>
+      </div>
+    </div>
+
+    <aside class="updates-panel">
+      <div class="panel-heading"><p class="eyebrow">02 / Recent updates</p><span>{String(posts.length).padStart(2, "0")}</span></div>
+      <div class="updates-list">
+        {recentPosts.map((post: any, index) => (
+          <a class="update" href={post.url}>
+            <span class="update-index">0{index + 1}</span>
+            <div><time>{new Date(post.frontmatter.pubDate).toLocaleDateString("zh-CN", { year: "numeric", month: "2-digit", day: "2-digit" })}</time><h2>{post.frontmatter.title}</h2><p>{post.frontmatter.description}</p></div>
+            <span class="arrow">↗</span>
+          </a>
+        ))}
+      </div>
+      <a class="all-posts" href="/blog/">浏览全部文章 <span>→</span></a>
+    </aside>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { position: relative; display: grid; height: calc(100svh - 72px); min-height: 0; grid-template-columns: minmax(220px, 27%) minmax(350px, 1fr) minmax(310px, 32%); overflow: hidden; background: var(--paper); }
+  .hero-sky, .hero-light { position: absolute; inset: 0; pointer-events: none; }
+  .hero-sky { background: linear-gradient(115deg, var(--sky) 0%, #d7eef5 36%, var(--sky-deep) 68%, var(--sky) 100%); background-size: 220% 220%; clip-path: polygon(0 0, 36% 0, 64% 100%, 0 100%); animation: sky-enter 1.15s cubic-bezier(.2,.8,.2,1) both, sky-flow 8s ease-in-out 1.15s infinite alternate; }
+  .hero-light { background: var(--white); clip-path: polygon(77% 0, 100% 0, 100% 100%, 62% 100%); animation: soft-fade 1.2s ease .35s both; }
+  .now-panel, .updates-panel, .identity { position: relative; z-index: 2; }
+  .now-panel { display: flex; height: 100%; min-height: 0; flex-direction: column; justify-content: space-between; padding: clamp(22px, 4vh, 38px) 28px clamp(20px, 3vh, 28px) 32px; color: var(--ink); }
+  .status { display: flex; align-items: center; gap: 8px; margin: 14px 0 0; color: var(--muted); font-size: .66rem; text-transform: uppercase; }
+  .status span { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(215,255,72,.12); }
+  .project-block { width: min(260px, 90%); margin-bottom: clamp(10px, 3vh, 38px); }
+  .project-no { color: #999; font-family: var(--serif); font-size: .7rem; }
+  .project-block h2 { margin: clamp(10px, 2vh, 16px) 0; font-family: var(--serif); font-size: clamp(2rem, 5.5vh, 4.1rem); font-weight: 400; line-height: .9; letter-spacing: -.045em; }
+  .project-block p { margin: 0 0 clamp(16px, 3vh, 28px); color: #47636f; font-size: .78rem; line-height: 1.65; }
+  .coordinates { margin: 0; color: #52717e; font-family: monospace; font-size: .62rem; }
+  .identity { display: flex; align-items: center; justify-content: center; min-width: 0; }
+  .issue { position: absolute; top: clamp(22px, 4vh, 38px); left: 50%; width: max-content; margin: 0; font-family: var(--serif); font-size: .7rem; font-style: italic; transform: translateX(-50%); }
+  .portrait-wrap { position: absolute; top: 12%; left: 50%; display: grid; width: min(27vw, 46vh, 390px); aspect-ratio: 4 / 5; place-items: center; overflow: hidden; border: 1px solid var(--ink); border-radius: 50% 50% 46% 46%; background: linear-gradient(145deg, var(--white) 0 58%, var(--sky) 58%); transform: translateX(-50%); }
+  .portrait-wrap::before { position: absolute; width: 72%; aspect-ratio: 1; border: 1px solid var(--ink); border-radius: 50%; content: ""; }
+  .portrait-wrap span { position: relative; z-index: 1; font-family: var(--serif); font-size: clamp(7rem, 15vw, 13rem); font-style: italic; line-height: 1; }
+  .statement { position: absolute; right: 0; bottom: clamp(24px, 5vh, 52px); left: 0; z-index: 4; color: var(--ink); text-align: center; }
+  .statement > p { margin: 0 0 10px; font-size: .62rem; font-weight: 850; letter-spacing: .18em; }
+  .statement h1 { margin: 0; font-family: var(--serif); font-size: clamp(3rem, 8vh, 5.3rem); font-weight: 400; line-height: .79; letter-spacing: -.055em; }
+  .statement em { font-weight: 400; }
+  .identity-meta { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: clamp(12px, 2.5vh, 24px); font-size: .59rem; font-weight: 850; letter-spacing: .12em; }
+  .identity-meta i { width: 3px; height: 3px; border-radius: 50%; background: currentColor; }
+  .updates-panel { align-self: center; margin: clamp(18px, 3vh, 28px) 30px clamp(18px, 3vh, 28px) 0; border: 1px solid var(--ink); background: rgba(255,255,255,.86); backdrop-filter: blur(8px); }
+  .panel-heading { display: flex; align-items: center; justify-content: space-between; padding: clamp(14px, 2.2vh, 20px) 22px; border-bottom: 1px solid var(--ink); }
+  .panel-heading span { font-family: var(--serif); font-size: .8rem; }
+  .update { display: grid; grid-template-columns: 28px 1fr 20px; gap: 12px; padding: clamp(12px, 2.2vh, 21px) 20px; border-bottom: 1px solid var(--line); transition: background .2s ease; }
+  .update:hover { background: var(--accent); }
+  .update-index, .update time { font-family: monospace; font-size: .6rem; }
+  .update h2 { margin: 6px 0 7px; font-family: var(--serif); font-size: 1.28rem; font-weight: 400; line-height: 1.16; }
+  .update p { display: -webkit-box; overflow: hidden; margin: 0; color: var(--muted); font-size: .69rem; line-height: 1.5; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .arrow { align-self: center; font-size: 1rem; }
+  .all-posts { display: flex; align-items: center; justify-content: space-between; padding: clamp(14px, 2.2vh, 20px) 22px; font-size: .7rem; font-weight: 800; text-transform: uppercase; }
+  .all-posts span { font-size: 1.2rem; }
+
+  .now-panel > div:first-child { animation: rise-in .8s ease .55s both; }
+  .project-block { animation: rise-in .9s ease .8s both; }
+  .coordinates { animation: rise-in .8s ease 1s both; }
+  .issue { animation: reveal-center .8s ease .65s both; }
+  .portrait-wrap { animation: portrait-in 1.05s cubic-bezier(.2,.75,.2,1) .75s both; }
+  .statement > p { animation: rise-in .75s ease 1.05s both; }
+  .statement h1 { animation: rise-in 1.15s cubic-bezier(.2,.75,.2,1) 1.15s both; }
+  .identity-meta { animation: rise-in .8s ease 1.5s both; }
+  .updates-panel { animation: panel-in .9s cubic-bezier(.2,.75,.2,1) 1.1s both; }
+
+  @keyframes sky-enter { from { transform: translateX(-110%); } to { transform: translateX(0); } }
+  @keyframes sky-flow { from { background-position: 0% 40%; } to { background-position: 100% 60%; } }
+  @keyframes soft-fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes rise-in { from { opacity: 0; filter: blur(7px); transform: translateY(22px); } to { opacity: 1; filter: blur(0); transform: translateY(0); } }
+  @keyframes reveal-center { from { opacity: 0; filter: blur(5px); transform: translate(-50%, 15px); } to { opacity: 1; filter: blur(0); transform: translate(-50%, 0); } }
+  @keyframes portrait-in { from { opacity: 0; transform: translate(-50%, 24px) scale(.96); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+  @keyframes panel-in { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: translateX(0); } }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 35% 65%; }
+    .hero-sky { clip-path: polygon(0 0, 42% 0, 69% 56%, 0 72%); }
+    .identity { grid-column: 1 / -1; grid-row: 1; min-height: 620px; pointer-events: none; }
+    .portrait-wrap { top: 8%; width: min(48vw, 430px); }
+    .statement { right: 5%; bottom: 9%; left: 5%; }
+    .now-panel { grid-column: 1; grid-row: 1; min-height: 620px; }
+    .updates-panel { grid-column: 2; grid-row: 2; margin: 0 24px 36px; }
+  }
+  @media (max-width: 720px) {
+    .hero { display: flex; height: auto; min-height: 0; flex-direction: column; }
+    .hero-sky, .hero-light { display: none; }
+    .identity { order: 1; min-height: 660px; background: var(--paper); }
+    .issue { top: 24px; }
+    .portrait-wrap { top: 8%; width: min(68vw, 290px); }
+    .statement { right: 12px; bottom: 40px; left: 12px; }
+    .statement h1 { font-size: clamp(3.15rem, 14vw, 4.2rem); line-height: .82; }
+    .statement > p { margin-bottom: 8px; }
+    .identity-meta { margin-top: 18px; }
+    .now-panel { order: 2; min-height: 500px; padding: 30px 20px; background: var(--sky); }
+    .project-block { margin: 80px 0 30px; }
+    .updates-panel { order: 3; margin: 0; border-width: 1px 0 0; background: var(--white); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-sky, .hero-light, .now-panel > div:first-child, .project-block, .coordinates, .issue, .portrait-wrap, .statement > p, .statement h1, .identity-meta, .updates-panel { animation: none; }
+  }
+</style>

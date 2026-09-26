@@ -1,27 +1,39 @@
 ---
-
+import BaseLayout from "../layouts/BaseLayout.astro";
+const posts = Object.values(import.meta.glob("./posts/*.md", { eager: true })).sort((a: any, b: any) => new Date(b.frontmatter.pubDate).valueOf() - new Date(a.frontmatter.pubDate).valueOf());
 ---
-
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="viewport" content="width=device-width" />
-        <meta name="generator" content={Astro.generator} />
-        <title>Astro</title>
-    </head>
-    <body>
-        <a href="/">Home</a>
-
-        <a href="/about/">About</a>
-
-        <h1>blog page</h1>
-
-        <ul>
-            <li><a href="/posts/post-1/">Post 1</a></li>
-            <li><a href="/posts/post-2/">Post 2</a></li>
-            <li><a href="/posts/post-3/">Post 3</a></li>
-        </ul>
-    </body>
-</html>
+<BaseLayout title="文章 — Miyuki" description="Miyuki 关于软件、AI 与个人系统的文章。">
+  <div class="inner-page">
+    <div class="page-kicker"><p class="eyebrow">Notes & Essays</p><span>{String(posts.length).padStart(2, "0")} entries</span></div>
+    <h1 class="page-title">Writing is<br /><em>thinking.</em></h1>
+    <p class="page-intro">记录那些值得被说清楚的事：软件构建、人工智能，以及如何建立一套能长期工作的个人系统。</p>
+    <div class="post-list">
+      {posts.map((post: any, index) => (
+        <a class="post-row" href={post.url}>
+          <span class="post-number">{String(index + 1).padStart(2, "0")}</span>
+          <div class="post-main"><h2>{post.frontmatter.title}</h2><p>{post.frontmatter.description}</p></div>
+          <div class="post-meta"><time>{new Date(post.frontmatter.pubDate).toLocaleDateString("zh-CN")}</time><span>{post.frontmatter.tags?.[0] ?? "Notes"}</span></div>
+          <span class="post-arrow">↗</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+<style>
+  .page-kicker > span { font-family: monospace; font-size: .65rem; text-transform: uppercase; }
+  .page-title em { font-weight: 400; }
+  .post-list { margin-top: 80px; border-top: 1px solid var(--ink); }
+  .post-row { display: grid; grid-template-columns: 48px minmax(0, 1fr) 160px 30px; gap: 26px; align-items: center; padding: 28px 4px; border-bottom: 1px solid var(--line); transition: padding .2s ease, background .2s ease; }
+  .post-row:hover { padding-right: 16px; padding-left: 16px; background: var(--accent); }
+  .post-number { font-family: monospace; font-size: .66rem; }
+  .post-main h2 { margin: 0 0 8px; font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 400; letter-spacing: -.025em; }
+  .post-main p { margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.5; }
+  .post-meta { display: flex; flex-direction: column; gap: 8px; font-family: monospace; font-size: .62rem; text-transform: uppercase; }
+  .post-arrow { font-size: 1.1rem; }
+  @media (max-width: 720px) {
+    .post-list { margin-top: 54px; }
+    .post-row { grid-template-columns: 30px 1fr 20px; gap: 10px; padding: 23px 2px; }
+    .post-meta { grid-column: 2; flex-direction: row; }
+    .post-arrow { grid-column: 3; grid-row: 1; }
+  }
+</style>

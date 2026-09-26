@@ -1,0 +1,25 @@
+---
+import Header from "../components/Header.astro";
+import "../styles/global.css";
+interface Props { title?: string; description?: string; theme?: "light" | "dark"; showFooter?: boolean; }
+const { title = "Miyuki — Software, AI & Notes", description = "Miyuki 的个人研究与技术写作。", theme = "light", showFooter = true } = Astro.props;
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="page-shell">
+      <Header theme={theme} />
+      <main class="site-main"><slot /></main>
+      {showFooter && <footer class="site-footer"><span>© {new Date().getFullYear()} Miyuki</span><span>Built with Astro · Amsterdam</span></footer>}
+    </div>
+  </body>
+</html>
