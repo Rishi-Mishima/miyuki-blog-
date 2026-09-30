@@ -1,0 +1,137 @@
+<div class="pixel-cursor" aria-hidden="true">
+  <svg viewBox="0 0 16 20" width="24" height="30" shape-rendering="crispEdges">
+    <path fill="#05070d" d="M0 0h2v2h2v2h2v2h2v2h2v2h2v2h2v2H9v2h2v4H7v-2H5v-4H3v2H0z" />
+    <path class="cursor-fill" d="M1 2h1v2h2v2h2v2h2v2h2v2h2v1H7v3h2v3H8v-2H6v-5H4v1H3v1H1z" />
+  </svg>
+</div>
+<div class="pixel-cursor-trail" aria-hidden="true"><span></span></div>
+
+<style>
+  .pixel-cursor,
+  .pixel-cursor-trail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    display: none;
+    pointer-events: none;
+  }
+  .pixel-cursor svg {
+    display: block;
+    overflow: visible;
+    filter: drop-shadow(0 0 3px rgba(126, 249, 255, 0.55));
+  }
+  .cursor-fill { fill: #eefcff; }
+  .pixel-cursor-trail { z-index: 9998; }
+  .pixel-cursor-trail span {
+    display: block;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(18, 187, 201, 0.65);
+    background: rgba(126, 249, 255, 0.035);
+    box-shadow: 0 0 12px rgba(18, 187, 201, 0.2), inset 0 0 10px rgba(18, 187, 201, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.15s ease, height 0.15s ease, border-color 0.15s ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    :global(html.pixel-cursor-visible),
+    :global(html.pixel-cursor-visible *) { cursor: none !important; }
+    :global(html.pixel-cursor-visible) .pixel-cursor,
+    :global(html.pixel-cursor-visible) .pixel-cursor-trail { display: block; }
+    :global(html.pixel-cursor-hover) .cursor-fill { fill: #7ef9ff; }
+    :global(html.pixel-cursor-hover) .pixel-cursor-trail span {
+      width: 52px;
+      height: 52px;
+      border-color: #d227a0;
+    }
+    :global(html.pixel-cursor-down) .cursor-fill { fill: #ffdd6b; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.pixel-cursor-visible) .pixel-cursor-trail { display: none; }
+    .pixel-cursor-trail span { transition: none; }
+  }
+</style>
+
+<script>
+  let cleanup: (() => void) | undefined;
+
+  function setupCursor() {
+    cleanup?.();
+    const cursor = document.querySelector<HTMLElement>(".pixel-cursor");
+    const trail = document.querySelector<HTMLElement>(".pixel-cursor-trail");
+    if (!cursor || !trail) return;
+
+    const root = document.documentElement;
+    const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    const controller = new AbortController();
+    const options = { signal: controller.signal, passive: true };
+    let x = 0, y = 0, trailX = 0, trailY = 0;
+    let visible = false;
+    let frame = 0;
+
+    function hide() {
+      visible = false;
+      root.classList.remove("pixel-cursor-visible", "pixel-cursor-hover", "pixel-cursor-down");
+      cancelAnimationFrame(frame);
+      frame = 0;
+    }
+
+    function updateTarget() {
+      const target = document.elementFromPoint(x, y);
+      if (target?.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"]), iframe')) {
+        hide();
+        return;
+      }
+      root.classList.toggle("pixel-cursor-hover", !!target?.closest('a, button, [role="button"], summary'));
+    }
+
+    function follow() {
+      frame = 0;
+      if (!visible || reducedMotion.matches) return;
+      trailX += (x - trailX) * 0.12;
+      trailY += (y - trailY) * 0.12;
+      trail.style.transform = `translate3d(${trailX}px, ${trailY}px, 0)`;
+      if (Math.abs(x - trailX) + Math.abs(y - trailY) > 0.2) {
+        frame = requestAnimationFrame(follow);
+      }
+    }
+
+    document.addEventListener("pointermove", (event) => {
+      if (event.pointerType !== "mouse" || !finePointer.matches) {
+        hide();
+        return;
+      }
+      x = event.clientX;
+      y = event.clientY;
+      if (!visible) {
+        trailX = x;
+        trailY = y;
+        trail.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      }
+      visible = true;
+      cursor.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      root.classList.add("pixel-cursor-visible");
+      updateTarget();
+      if (visible && !frame && !reducedMotion.matches) frame = requestAnimationFrame(follow);
+    }, options);
+    document.addEventListener("pointerout", (event) => {
+      if (!event.relatedTarget) hide();
+    }, options);
+    document.addEventListener("pointerdown", () => {
+      if (visible) root.classList.add("pixel-cursor-down");
+    }, options);
+    document.addEventListener("pointerup", () => root.classList.remove("pixel-cursor-down"), options);
+    document.addEventListener("keydown", hide, options);
+    document.addEventListener("visibilitychange", () => { if (document.hidden) hide(); }, options);
+    document.addEventListener("scroll", () => { if (visible) updateTarget(); }, { ...options, capture: true });
+    window.addEventListener("blur", hide, options);
+    finePointer.addEventListener("change", hide, options);
+    reducedMotion.addEventListener("change", hide, options);
+    cleanup = () => { hide(); controller.abort(); };
+  }
+
+  setupCursor();
+  document.addEventListener("astro:page-load", setupCursor);
+  document.addEventListener("astro:before-swap", () => cleanup?.());
+</script>
