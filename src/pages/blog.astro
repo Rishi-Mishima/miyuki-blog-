@@ -1,39 +1,432 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-const posts = Object.values(import.meta.glob("./posts/*.md", { eager: true })).sort((a: any, b: any) => new Date(b.frontmatter.pubDate).valueOf() - new Date(a.frontmatter.pubDate).valueOf());
+const posts = Object.values(import.meta.glob("./posts/*.md", { eager: true }))
+  .sort((a: any, b: any) => new Date(b.frontmatter.pubDate).valueOf() - new Date(a.frontmatter.pubDate).valueOf())
+  .map((post: any) => ({
+    ...post,
+    date: new Date(post.frontmatter.pubDate),
+    tags: post.frontmatter.tags?.length ? post.frontmatter.tags : ["Notes"],
+  }));
 ---
-<BaseLayout title="文章 — Miyuki" description="Miyuki 关于软件、AI 与个人系统的文章。">
-  <div class="inner-page">
-    <div class="page-kicker"><p class="eyebrow">Notes & Essays</p><span>{String(posts.length).padStart(2, "0")} entries</span></div>
-    <h1 class="page-title">Writing is<br /><em>thinking.</em></h1>
-    <p class="page-intro">记录那些值得被说清楚的事：软件构建、人工智能，以及如何建立一套能长期工作的个人系统。</p>
-    <div class="post-list">
-      {posts.map((post: any, index) => (
-        <a class="post-row" href={post.url}>
-          <span class="post-number">{String(index + 1).padStart(2, "0")}</span>
-          <div class="post-main"><h2>{post.frontmatter.title}</h2><p>{post.frontmatter.description}</p></div>
-          <div class="post-meta"><time>{new Date(post.frontmatter.pubDate).toLocaleDateString("zh-CN")}</time><span>{post.frontmatter.tags?.[0] ?? "Notes"}</span></div>
-          <span class="post-arrow">↗</span>
-        </a>
-      ))}
+
+<BaseLayout
+  title="文章 — Miyuki"
+  description="Miyuki 关于软件、AI 与个人系统的文章。"
+  theme="dark"
+>
+  <section class="archive-page">
+    <div class="circuit-lines" aria-hidden="true"></div>
+    <div class="archive-shell">
+      <header class="archive-hero">
+        <div class="hero-copy">
+          <div class="page-kicker">
+            <p class="eyebrow">Header Archive</p>
+            <span>{String(posts.length).padStart(2, "0")} entries online</span>
+          </div>
+          <h1>Neon notes<br /><em>for future systems.</em></h1>
+          <p>
+            这里收纳软件工程、AI 实验和长期个人系统的文章。每篇文章都带有自定义标签，并沿着发布时间进入同一条发光时间线。
+          </p>
+        </div>
+        <div class="signal-panel" aria-label="文章状态">
+          <span class="signal-label">Signal</span>
+          <strong>{posts.length}</strong>
+          <span>published transmissions</span>
+        </div>
+      </header>
+
+      <div class="archive-grid">
+        <div class="post-list" aria-label="文章列表">
+          {posts.map((post: any, index) => (
+            <a class="post-row" href={post.url}>
+              <span class="post-number">{String(index + 1).padStart(2, "0")}</span>
+              <div class="post-main">
+                <time datetime={post.date.toISOString()}>{post.date.toLocaleDateString("zh-CN", { year: "numeric", month: "short", day: "numeric" })}</time>
+                <h2>{post.frontmatter.title}</h2>
+                <p>{post.frontmatter.description}</p>
+                <div class="tag-list" aria-label="文章标签">
+                  {post.tags.map((tag: string) => <span>{tag}</span>)}
+                </div>
+              </div>
+              <span class="post-arrow" aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </div>
+
+        <aside class="timeline" aria-label="发布时间线">
+          <div class="timeline-heading">
+            <p class="eyebrow">Timeline</p>
+            <span>latest first</span>
+          </div>
+          <ol>
+            {posts.map((post: any) => (
+              <li>
+                <a href={post.url}>
+                  <time datetime={post.date.toISOString()}>{post.date.toLocaleDateString("zh-CN", { month: "2-digit", day: "2-digit" })}</time>
+                  <span>{post.frontmatter.title}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </aside>
+      </div>
     </div>
-  </div>
+  </section>
 </BaseLayout>
+
 <style>
-  .page-kicker > span { font-family: monospace; font-size: .65rem; text-transform: uppercase; }
-  .page-title em { font-weight: 400; }
-  .post-list { margin-top: 80px; border-top: 1px solid var(--ink); }
-  .post-row { display: grid; grid-template-columns: 48px minmax(0, 1fr) 160px 30px; gap: 26px; align-items: center; padding: 28px 4px; border-bottom: 1px solid var(--line); transition: padding .2s ease, background .2s ease; }
-  .post-row:hover { padding-right: 16px; padding-left: 16px; background: var(--accent); }
-  .post-number { font-family: monospace; font-size: .66rem; }
-  .post-main h2 { margin: 0 0 8px; font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 400; letter-spacing: -.025em; }
-  .post-main p { margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.5; }
-  .post-meta { display: flex; flex-direction: column; gap: 8px; font-family: monospace; font-size: .62rem; text-transform: uppercase; }
-  .post-arrow { font-size: 1.1rem; }
+  :global(html) {
+    background: #05070d;
+  }
+
+  :global(body) {
+    background: #05070d;
+  }
+
+  :global(.site-footer) {
+    border-color: rgba(126, 249, 255, 0.2);
+    background: #05070d;
+    color: #d9fbff;
+  }
+
+  .archive-page {
+    position: relative;
+    min-height: calc(100vh - 72px);
+    overflow: hidden;
+    background:
+      linear-gradient(rgba(126, 249, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(126, 249, 255, 0.06) 1px, transparent 1px),
+      radial-gradient(circle at 18% 4%, rgba(255, 45, 214, 0.22), transparent 28%),
+      radial-gradient(circle at 84% 18%, rgba(20, 255, 154, 0.16), transparent 24%),
+      #05070d;
+    background-size: 42px 42px, 42px 42px, auto, auto, auto;
+    color: #eefcff;
+  }
+
+  .archive-page::before {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, rgba(255, 255, 255, 0.06), transparent 24%, transparent 72%, rgba(126, 249, 255, 0.07));
+    content: "";
+    pointer-events: none;
+  }
+
+  .circuit-lines {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, transparent 0 12%, rgba(255, 45, 214, 0.45) 12% 12.12%, transparent 12.12% 100%),
+      linear-gradient(180deg, transparent 0 38%, rgba(255, 202, 40, 0.35) 38% 38.12%, transparent 38.12% 100%);
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.85), transparent 78%);
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  .archive-shell {
+    position: relative;
+    z-index: 1;
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 72px 0 108px;
+  }
+
+  .archive-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 48px;
+    align-items: end;
+  }
+
+  .page-kicker {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(126, 249, 255, 0.42);
+    color: #7ef9ff;
+    text-shadow: 0 0 18px rgba(126, 249, 255, 0.65);
+  }
+
+  .page-kicker > span,
+  .signal-panel,
+  .post-number,
+  .post-main time,
+  .tag-list,
+  .timeline {
+    font-family: var(--mono);
+  }
+
+  .page-kicker > span {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    max-width: 900px;
+    margin: 44px 0 22px;
+    color: #ffffff;
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 8vw, 8rem);
+    font-weight: 400;
+    line-height: 0.88;
+    letter-spacing: 0;
+    text-shadow:
+      0 0 14px rgba(126, 249, 255, 0.52),
+      0 0 42px rgba(255, 45, 214, 0.25);
+  }
+
+  h1 em {
+    color: #ffca28;
+    font-weight: 400;
+    text-shadow: 0 0 24px rgba(255, 202, 40, 0.45);
+  }
+
+  .hero-copy > p {
+    max-width: 680px;
+    margin: 0;
+    color: #a9c8cd;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .signal-panel {
+    position: relative;
+    display: grid;
+    gap: 8px;
+    min-height: 210px;
+    align-content: end;
+    padding: 24px;
+    border: 1px solid rgba(255, 45, 214, 0.42);
+    background: rgba(5, 7, 13, 0.72);
+    box-shadow:
+      inset 0 0 38px rgba(255, 45, 214, 0.12),
+      0 0 32px rgba(255, 45, 214, 0.18);
+  }
+
+  .signal-panel::before {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #14ff9a;
+    box-shadow: 0 0 18px #14ff9a;
+    content: "";
+  }
+
+  .signal-label,
+  .signal-panel > span:last-child {
+    color: #94b9be;
+    font-size: 0.66rem;
+    text-transform: uppercase;
+  }
+
+  .signal-panel strong {
+    color: #ffffff;
+    font-size: 5rem;
+    line-height: 0.82;
+    text-shadow: 0 0 18px rgba(126, 249, 255, 0.8);
+  }
+
+  .archive-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 52px;
+    align-items: start;
+    margin-top: 84px;
+  }
+
+  .post-list {
+    display: grid;
+    gap: 18px;
+  }
+
+  .post-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) 30px;
+    gap: 22px;
+    align-items: start;
+    min-height: 192px;
+    padding: 26px;
+    border: 1px solid rgba(126, 249, 255, 0.2);
+    background: rgba(7, 11, 21, 0.78);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.025);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .post-row::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+    background: linear-gradient(#7ef9ff, #ff2dd6 46%, #ffca28);
+    content: "";
+  }
+
+  .post-row:hover {
+    border-color: rgba(126, 249, 255, 0.62);
+    box-shadow:
+      0 0 26px rgba(126, 249, 255, 0.14),
+      0 0 48px rgba(255, 45, 214, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .post-number {
+    color: #ff2dd6;
+    font-size: 0.7rem;
+    text-shadow: 0 0 14px rgba(255, 45, 214, 0.75);
+  }
+
+  .post-main time {
+    display: block;
+    margin-bottom: 12px;
+    color: #7ef9ff;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+  }
+
+  .post-main h2 {
+    margin: 0 0 12px;
+    font-family: var(--serif);
+    font-size: clamp(1.65rem, 3vw, 2.9rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .post-main p {
+    max-width: 680px;
+    margin: 0;
+    color: #a9c8cd;
+    font-size: 0.86rem;
+    line-height: 1.65;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .tag-list span {
+    max-width: 100%;
+    padding: 7px 10px;
+    border: 1px solid rgba(255, 202, 40, 0.44);
+    color: #ffdd6b;
+    font-size: 0.62rem;
+    line-height: 1;
+    text-transform: uppercase;
+    box-shadow: inset 0 0 14px rgba(255, 202, 40, 0.1);
+  }
+
+  .post-arrow {
+    color: #14ff9a;
+    font-size: 1.2rem;
+    text-shadow: 0 0 16px rgba(20, 255, 154, 0.75);
+  }
+
+  .timeline {
+    position: sticky;
+    top: 28px;
+    padding: 24px 0 8px 28px;
+    border-left: 1px solid rgba(126, 249, 255, 0.34);
+  }
+
+  .timeline-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 28px;
+    color: #7ef9ff;
+  }
+
+  .timeline-heading span {
+    color: #94b9be;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+  }
+
+  ol {
+    display: grid;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    position: relative;
+  }
+
+  li::before {
+    position: absolute;
+    top: 2px;
+    left: -34px;
+    width: 11px;
+    height: 11px;
+    border: 1px solid #7ef9ff;
+    border-radius: 50%;
+    background: #05070d;
+    box-shadow: 0 0 16px rgba(126, 249, 255, 0.9);
+    content: "";
+  }
+
+  .timeline a {
+    display: grid;
+    gap: 8px;
+  }
+
+  .timeline time {
+    color: #ff2dd6;
+    font-size: 0.68rem;
+  }
+
+  .timeline span {
+    color: #d8f8fb;
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+
   @media (max-width: 720px) {
-    .post-list { margin-top: 54px; }
-    .post-row { grid-template-columns: 30px 1fr 20px; gap: 10px; padding: 23px 2px; }
-    .post-meta { grid-column: 2; flex-direction: row; }
-    .post-arrow { grid-column: 3; grid-row: 1; }
+    .archive-shell {
+      width: min(100% - 28px, 1180px);
+      padding: 46px 0 78px;
+    }
+
+    .archive-hero,
+    .archive-grid {
+      grid-template-columns: 1fr;
+      gap: 34px;
+    }
+
+    h1 {
+      margin-top: 34px;
+      font-size: clamp(3.2rem, 17vw, 5.3rem);
+    }
+
+    .signal-panel {
+      min-height: 150px;
+    }
+
+    .archive-grid {
+      margin-top: 58px;
+    }
+
+    .post-row {
+      grid-template-columns: 32px minmax(0, 1fr) 22px;
+      gap: 12px;
+      min-height: 0;
+      padding: 22px 16px 22px 18px;
+    }
+
+    .timeline {
+      position: relative;
+      top: auto;
+    }
   }
 </style>
