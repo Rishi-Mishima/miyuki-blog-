@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import { Moon, Sun } from "@lucide/astro";
 const { frontmatter } = Astro.props;
 const headings: { depth: number; slug: string; text: string }[] = Astro.props.headings ?? [];
 const sections = headings.filter(({ depth }) => depth === 2 || depth === 3);
@@ -19,10 +20,14 @@ const duplicateTitle = headings[0]?.depth === 1 && headings[0]?.text === frontma
       <header class="article-header">
         <div class="article-tools">
           <a class="back" href="/blog/">← 全部文章</a>
-          <fieldset class="article-theme" aria-label="文章配色" hidden>
-            <label><input type="radio" name="article-theme" value="dark" checked /><span>深色</span></label>
-            <label><input type="radio" name="article-theme" value="light" /><span>白色</span></label>
-          </fieldset>
+          <label class="article-theme" title="切换到白色模式" hidden>
+            <input type="checkbox" role="switch" name="article-theme" aria-label="白色模式" />
+            <span class="theme-track" aria-hidden="true">
+              <span class="theme-thumb"></span>
+              <Moon class="theme-moon" size={18} stroke-width={1.8} />
+              <Sun class="theme-sun" size={18} stroke-width={1.8} />
+            </span>
+          </label>
         </div>
         <div class="article-meta">
           <time datetime={date.toISOString()}>{date.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}</time>
@@ -63,13 +68,19 @@ const duplicateTitle = headings[0]?.depth === 1 && headings[0]?.text === frontma
   .article-header .back { display: inline-flex; padding: 8px 0; margin-bottom: 32px; color: #7ef9ff; font-size: .875rem; }
   .article-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 32px; }
   .article-tools .back { margin-bottom: 0; }
-  .article-theme { display: flex; min-width: 0; gap: 2px; margin: 0; padding: 3px; border: 1px solid #28313b; border-radius: 6px; }
+  .article-theme { position: relative; display: inline-flex; width: 76px; height: 44px; flex: 0 0 76px; align-items: center; cursor: pointer; }
   .article-theme[hidden] { display: none; }
-  .article-theme label { position: relative; cursor: pointer; }
-  .article-theme input { position: absolute; width: 1px; height: 1px; opacity: 0; }
-  .article-theme span { display: block; min-width: 56px; padding: 6px 10px; border-radius: 3px; color: #a7afb9; font-size: .8125rem; line-height: 1.5; text-align: center; }
-  .article-theme input:checked + span { background: #1d2830; color: #7ef9ff; }
-  .article-theme input:focus-visible + span { outline: 2px solid #7ef9ff; outline-offset: 2px; }
+  .article-theme input { position: absolute; z-index: 3; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  .theme-track { position: relative; display: block; width: 76px; height: 42px; border-radius: 21px; background: #26313e; box-shadow: inset 0 1px 3px rgba(0,0,0,.25); transition: background .25s ease; }
+  .theme-thumb { position: absolute; top: 4px; left: 4px; width: 34px; height: 34px; border-radius: 50%; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.22); transition: transform .28s cubic-bezier(.2,.8,.2,1); }
+  .article-theme svg { position: absolute; z-index: 1; top: 12px; transition: color .25s ease; }
+  .theme-moon { left: 12px; color: #304455; }
+  .theme-sun { right: 12px; color: #9aabb9; }
+  .article-theme input:checked + .theme-track { background: #24b7bf; }
+  .article-theme input:checked + .theme-track .theme-thumb { transform: translateX(34px); }
+  .article-theme input:checked + .theme-track .theme-moon { color: #075d66; }
+  .article-theme input:checked + .theme-track .theme-sun { color: #087783; }
+  .article-theme input:focus-visible + .theme-track { outline: 2px solid #7ef9ff; outline-offset: 4px; }
   .article-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 16px 24px; padding-top: 20px; border-top: 1px solid rgba(126,249,255,.3); box-shadow: 0 -6px 12px -12px #7ef9ff; font-family: var(--mono); font-size: .75rem; color: #a7afb9; }
   .article-tags { display: flex; flex-wrap: wrap; gap: 8px 14px; min-width: 0; }
   .article-tags span { color: #e8a3d0; overflow-wrap: anywhere; }
@@ -149,15 +160,15 @@ const duplicateTitle = headings[0]?.depth === 1 && headings[0]?.text === frontma
     & .article-body a { text-decoration-color: #8ecbd1; }
     & .document-page :is(a,button,summary):focus-visible { outline-color: #087783; }
     & .article-body h2, & .article-body hr, & .article-end, & .toc-sticky,
-    & .mobile-toc, & .article-body :is(th,td), & .article-theme { border-color: #dce3e8; }
+    & .mobile-toc, & .article-body :is(th,td) { border-color: #dce3e8; }
     & .article-body :not(pre) > code { background: #f5f4f7; border-color: #e0dce5; color: #9f2675; }
     & .article-body pre, & .code-toolbar { border-color: #b8dce0; box-shadow: 0 0 14px rgba(8,119,131,.04); }
     & .article-body blockquote { color: #596672; border-color: #1595a1; }
     & .article-body th, & .code-toolbar { background: #f2f6f8; color: #18212b; }
     & .article-body input[type="checkbox"] { accent-color: #087783; }
-    & .copy-code, & .article-theme span { color: #596672; }
-    & .copy-code:hover, & .article-theme input:checked + span { color: #087783; background: #e5f3f5; }
-    & .article-theme input:focus-visible + span { outline-color: #087783; }
+    & .copy-code { color: #596672; }
+    & .copy-code:hover { color: #087783; background: #e5f3f5; }
+    & .article-theme input:focus-visible + .theme-track { outline-color: #087783; }
     & .copy-code[data-copied] { color: #087783; }
   }
   .copy-code[data-copied] { color: #7ef9ff; }
@@ -169,7 +180,10 @@ const duplicateTitle = headings[0]?.depth === 1 && headings[0]?.text === frontma
     .article-body { font-size: 16px; }
     .article-body pre { padding: 16px; font-size: .8125rem; }
   }
-  @media (prefers-reduced-motion: reduce) { html:has(.document-page) { scroll-behavior: auto; } }
+  @media (prefers-reduced-motion: reduce) {
+    html:has(.document-page) { scroll-behavior: auto; }
+    .theme-track, .theme-thumb, .article-theme svg { transition: none; }
+  }
 </style>
 
 <script>
@@ -179,19 +193,20 @@ const duplicateTitle = headings[0]?.depth === 1 && headings[0]?.text === frontma
     const article = document.querySelector<HTMLElement>(".article-shell");
     if (!article) return;
     const controller = new AbortController();
-    const themeControl = article.querySelector<HTMLFieldSetElement>(".article-theme");
-    const themeInputs = Array.from(article.querySelectorAll<HTMLInputElement>('input[name="article-theme"]'));
+    const themeControl = article.querySelector<HTMLLabelElement>(".article-theme");
+    const themeInput = article.querySelector<HTMLInputElement>('input[name="article-theme"]');
     function applyTheme(theme: string) {
       document.documentElement.dataset.articleTheme = theme === "light" ? "light" : "dark";
-      themeInputs.forEach((input) => { input.checked = input.value === document.documentElement.dataset.articleTheme; });
+      if (themeInput) themeInput.checked = theme === "light";
+      if (themeControl) themeControl.title = theme === "light" ? "切换到深色模式" : "切换到白色模式";
     }
     applyTheme(document.documentElement.dataset.articleTheme ?? "dark");
     if (themeControl) themeControl.hidden = false;
-    themeInputs.forEach((input) => input.addEventListener("change", () => {
-      if (!input.checked) return;
-      applyTheme(input.value);
-      try { localStorage.setItem("miyuki-article-theme", input.value); } catch {}
-    }, { signal: controller.signal }));
+    themeInput?.addEventListener("change", () => {
+      const theme = themeInput.checked ? "light" : "dark";
+      applyTheme(theme);
+      try { localStorage.setItem("miyuki-article-theme", theme); } catch {}
+    }, { signal: controller.signal });
     const timers = new Set<ReturnType<typeof setTimeout>>();
     const status = article.querySelector<HTMLElement>(".copy-status");
 
