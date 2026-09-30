@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { navigationLinks } from "../config/navigation";
 const posts = Object.values(import.meta.glob("./posts/*.md", { eager: true }));
 const recentPosts = posts
   .sort(
@@ -17,13 +18,10 @@ const recentPosts = posts
   showHeader={false}
 >
   <section class="hero">
-    <div class="hero-sky"></div>
+    <div class="hero-sky" aria-hidden="true"></div>
 
     <nav class="home-nav" aria-label="首页导航">
-      <a href="/blog/">成为CS工程师</a>
-      <a href="/blog/">AI实验室</a>
-      <a href="/blog/">Web3 & 一切我感兴趣的</a>
-      <a href="/about/">关于我</a>
+      {navigationLinks.map((link) => <a href={link.href}>{link.label}</a>)}
     </nav>
 
     <aside class="now-panel" id="now">
@@ -92,6 +90,11 @@ const recentPosts = posts
 
 <style>
   .hero {
+    --neon-background:
+      linear-gradient(rgba(126, 249, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(126, 249, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(115deg, transparent 12%, rgba(255, 45, 214, 0.16) 32%, transparent 54%),
+      linear-gradient(155deg, transparent 25%, rgba(126, 249, 255, 0.12) 58%, transparent 80%);
     position: relative;
     display: grid;
     height: 100svh;
@@ -103,13 +106,23 @@ const recentPosts = posts
   .hero-sky {
     position: absolute;
     inset: 0;
-    background: linear-gradient(118deg, #000 0%, #171717 45%, #000 72%);
-    background-size: 200% 200%;
+    background-color: #05070d;
+    background-image: var(--neon-background);
+    background-size: 42px 42px, 42px 42px, 200% 200%, 200% 200%;
     clip-path: polygon(0 0, 39% 0, 61% 100%, 0 100%);
     pointer-events: none;
     animation:
       sky-enter 1.15s cubic-bezier(0.2, 0.8, 0.2, 1) both,
       sky-flow 8s ease-in-out 1.15s infinite alternate;
+  }
+  .hero-sky::after {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, transparent 12%, rgba(255, 45, 214, 0.5) 12% 12.12%, transparent 12.12%),
+      linear-gradient(180deg, transparent 38%, rgba(126, 249, 255, 0.4) 38% 38.12%, transparent 38.12%);
+    filter: drop-shadow(0 0 8px rgba(126, 249, 255, 0.45));
+    content: "";
   }
   .home-nav {
     --nav-offset: -50%;
@@ -169,7 +182,8 @@ const recentPosts = posts
     transform: translateY(clamp(30px, 6vh, 56px));
   }
   .now-panel > div:first-child {
-    color: #929292;
+    color: #7ef9ff;
+    text-shadow: 0 0 18px rgba(126, 249, 255, 0.6);
     font-family: var(--mono);
   }
   .status {
@@ -177,7 +191,7 @@ const recentPosts = posts
     align-items: center;
     gap: 16px;
     margin: 0 0 22px -28px;
-    color: #bdbdbd;
+    color: #a9c8cd;
     font-family: var(--mono);
     font-size: 0.72rem;
   }
@@ -185,26 +199,29 @@ const recentPosts = posts
     width: 10px;
     height: 10px;
     flex: 0 0 auto;
-    border: 2px solid #fff;
+    border: 2px solid #14ff9a;
+    background: #14ff9a;
     border-radius: 50%;
-    box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 16px rgba(20, 255, 154, 0.7);
   }
   .project-block {
     width: min(310px, 92%);
     margin: 0;
     padding-left: 28px;
-    border-left: 1px solid #424242;
+    border-left: 1px solid #ff2dd6;
+    box-shadow: -8px 0 18px -12px #ff2dd6;
   }
   .project-block h2 {
     margin: 0 0 16px;
     font-family: var(--mono);
     font-size: clamp(1.3rem, 1.8vw, 1.75rem);
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
+    text-shadow: 0 0 20px rgba(126, 249, 255, 0.4);
   }
   .project-block p {
     margin: 0 0 clamp(20px, 3vh, 30px);
-    color: #999;
+    color: #a9c8cd;
     font-family: var(--mono);
     font-size: 0.76rem;
     line-height: 1.8;
@@ -214,6 +231,10 @@ const recentPosts = posts
     align-items: center;
     justify-content: center;
     min-width: 0;
+  }
+  .project-block .text-link {
+    color: #ffdd6b;
+    text-shadow: 0 0 14px rgba(255, 202, 40, 0.35);
   }
   .portrait-wrap {
     position: absolute;
@@ -571,7 +592,9 @@ const recentPosts = posts
       order: 2;
       min-height: 500px;
       padding: 70px 28px;
-      background: #000;
+      background-color: #05070d;
+      background-image: var(--neon-background);
+      background-size: 42px 42px, 42px 42px, 200% 200%, 200% 200%;
       transform: none;
     }
     .project-block {

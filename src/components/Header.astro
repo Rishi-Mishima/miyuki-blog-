@@ -12,5 +12,5 @@ const { theme = "light" } = Astro.props;
   .site-header.dark { color: var(--white); border-color: rgba(255,255,255,.35); background: var(--ink); }
   .wordmark { display: inline-flex; flex-shrink: 0; align-items: center; gap: 10px; font-size: 1.125rem; font-weight: 900; letter-spacing: 0; }
   .wordmark-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); border: 1px solid var(--ink); }
-  @media (max-width: 720px) { .site-header { min-height: 62px; padding: 0 14px; gap: 16px; } }
+  @media (max-width: 720px) { .site-header { min-height: 62px; flex-direction: column; padding: 16px 14px; gap: 12px; } }
 </style>
