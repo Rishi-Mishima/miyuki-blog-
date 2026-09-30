@@ -73,6 +73,12 @@ const recentPosts = posts
           recentPosts.map((post: any, index) => (
             <li class="update-item">
               <a class="update" href={post.url}>
+                <div class="update-meta">
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <time datetime={new Date(post.frontmatter.pubDate).toISOString()}>
+                    {new Date(post.frontmatter.pubDate).toLocaleDateString("zh-CN", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                  </time>
+                </div>
                 <div>
                   <>
                     <h2>{post.frontmatter.title}</h2>
@@ -101,7 +107,35 @@ const recentPosts = posts
     min-height: 0;
     grid-template-columns: 29% 42% 29%;
     overflow: hidden;
-    background: #fff;
+    background-color: #fff;
+    background-image:
+      linear-gradient(rgba(17, 17, 17, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(17, 17, 17, 0.035) 1px, transparent 1px);
+    background-size: 42px 42px;
+  }
+  .hero::before {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    clip-path: polygon(calc(39% - 1px) 0, calc(39% + 2px) 0, calc(61% + 2px) 100%, calc(61% - 1px) 100%);
+    background: linear-gradient(180deg, #7ef9ff, #12bbc9, #ff2dd6, #7ef9ff);
+    background-size: 100% 300%;
+    animation: boundary-flow 10s ease-in-out infinite alternate;
+    content: "";
+    pointer-events: none;
+  }
+  .hero::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 24%;
+    height: 100%;
+    background:
+      linear-gradient(90deg, transparent calc(100% - 18px), rgba(14, 132, 146, 0.15) calc(100% - 18px) calc(100% - 17px), transparent calc(100% - 17px)),
+      linear-gradient(180deg, transparent 74%, rgba(14, 132, 146, 0.15) 74% calc(74% + 1px), transparent calc(74% + 1px)),
+      linear-gradient(90deg, transparent 24%, rgba(193, 26, 133, 0.15) 24% calc(24% + 1px), transparent calc(24% + 1px));
+    content: "";
+    pointer-events: none;
   }
   .hero-sky {
     position: absolute;
@@ -341,6 +375,7 @@ const recentPosts = posts
   }
   .updates-panel {
     z-index: 5;
+    min-width: 0;
     align-self: start;
     margin: clamp(90px, 14vh, 130px) 36px 0 28px;
   }
@@ -349,37 +384,85 @@ const recentPosts = posts
     align-items: center;
     justify-content: space-between;
     padding: 0 0 16px;
-    color: #777;
+    color: #087b88;
     font-family: var(--mono);
   }
   .panel-heading span {
     font-family: var(--serif);
     font-size: 0.8rem;
   }
+  .panel-heading::after {
+    width: 40px;
+    height: 2px;
+    background: #d227a0;
+    box-shadow: 0 0 8px rgba(210, 39, 160, 0.3);
+    content: "";
+  }
   .updates-list {
     margin: 0;
     padding: 2px 0 2px 24px;
-    border-left: 1px solid #999;
+    border-left: 1px solid rgba(8, 123, 136, 0.35);
     list-style: none;
   }
   .update-item {
     position: relative;
   }
   .update {
+    position: relative;
     display: block;
-    padding: 10px 0;
-    transition: transform 0.2s ease;
+    overflow: hidden;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(17, 17, 17, 0.1);
+    transition: border-color 0.2s ease;
   }
-  .update:hover {
-    transform: translateX(5px);
+  .update::before {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 35%, rgba(18, 187, 201, 0.12) 50%, transparent 65%);
+    transform: translateX(-110%);
+    content: "";
+    pointer-events: none;
+  }
+  .update:hover,
+  .update:focus-visible {
+    border-color: #12bbc9;
+  }
+  .update:hover::before,
+  .update:focus-visible::before {
+    animation: update-scan 0.8s ease both;
+  }
+  .update:focus-visible {
+    outline: 2px solid #087b88;
+    outline-offset: 4px;
+  }
+  .update-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 12px;
+    margin-bottom: 8px;
+    color: #087b88;
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    line-height: 1.5;
+  }
+  .update-meta > span {
+    color: #b41d88;
+  }
+  .update:hover h2,
+  .update:focus-visible h2 {
+    color: #087b88;
+    text-shadow: 0 0 12px rgba(18, 187, 201, 0.25);
   }
   .update h2 {
     margin: 0 0 6px;
     font-family: var(--mono);
-    font-size: clamp(0.82rem, 1vw, 1rem);
+    font-size: 1rem;
     font-weight: 700;
     line-height: 1.4;
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
   }
   .update p {
     display: -webkit-box;
@@ -387,7 +470,7 @@ const recentPosts = posts
     margin: 0;
     color: var(--muted);
     font-family: var(--mono);
-    font-size: 0.64rem;
+    font-size: 0.75rem;
     line-height: 1.55;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -432,6 +515,14 @@ const recentPosts = posts
     to {
       transform: translateX(0);
     }
+  }
+  @keyframes boundary-flow {
+    from { background-position: 0 0; }
+    to { background-position: 0 100%; }
+  }
+  @keyframes update-scan {
+    from { transform: translateX(-110%); }
+    to { transform: translateX(110%); }
   }
   @keyframes sky-flow {
     from {
@@ -534,6 +625,10 @@ const recentPosts = posts
     .hero-sky {
       display: none;
     }
+    .hero::before,
+    .hero::after {
+      display: none;
+    }
     .home-nav {
       --nav-offset: -50%;
       top: 16px;
@@ -553,7 +648,7 @@ const recentPosts = posts
     .identity {
       order: 1;
       min-height: 660px;
-      background: #fff;
+      background: transparent;
     }
     .portrait-wrap {
       top: 22%;
@@ -604,11 +699,17 @@ const recentPosts = posts
       order: 3;
       margin: 0;
       padding: 48px 28px 60px;
-      background: #fff;
+      align-self: stretch;
+      border-top: 2px solid #12bbc9;
+      background: transparent;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .hero::before,
+    .update::before,
+    .update:hover::before,
+    .update:focus-visible::before,
     .hero-sky,
     .home-nav,
     .now-panel > div:first-child,
@@ -619,6 +720,10 @@ const recentPosts = posts
     .identity-meta,
     .updates-panel {
       animation: none;
+    }
+    .update,
+    .update h2 {
+      transition: none;
     }
   }
 </style>
