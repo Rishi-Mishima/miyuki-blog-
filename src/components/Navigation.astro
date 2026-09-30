@@ -7,8 +7,8 @@ const links = [{ href: "/blog/", label: "文章" }, { href: "/#now", label: "最
 </nav>
 <style>
   nav { display: flex; align-items: center; gap: clamp(16px, 3vw, 42px); }
-  a { position: relative; padding: 6px 0; font-size: .72rem; font-weight: 750; }
+  a { position: relative; padding: 6px 0; font-size: 1rem; font-weight: 750; white-space: nowrap; }
   a::after { position: absolute; right: 0; bottom: 0; left: 0; height: 1px; background: currentColor; content: ""; transform: scaleX(0); transform-origin: right; transition: transform .2s ease; }
   a:hover::after, a.active::after { transform: scaleX(1); transform-origin: left; }
-  @media (max-width: 480px) { nav { gap: 13px; } a { font-size: .67rem; } }
+  @media (max-width: 480px) { nav { gap: 13px; } a { font-size: .875rem; } }
 </style>

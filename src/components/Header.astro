@@ -10,7 +10,7 @@ const { theme = "light" } = Astro.props;
 <style>
   .site-header { position: relative; z-index: 20; display: flex; min-height: 72px; align-items: center; justify-content: space-between; gap: 28px; padding: 0 32px; border-bottom: 1px solid var(--ink); background: var(--paper); }
   .site-header.dark { color: var(--white); border-color: rgba(255,255,255,.35); background: var(--ink); }
-  .wordmark { display: inline-flex; align-items: center; gap: 10px; font-size: .78rem; font-weight: 900; letter-spacing: .08em; }
+  .wordmark { display: inline-flex; flex-shrink: 0; align-items: center; gap: 10px; font-size: 1.125rem; font-weight: 900; letter-spacing: 0; }
   .wordmark-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); border: 1px solid var(--ink); }
   @media (max-width: 720px) { .site-header { min-height: 62px; padding: 0 14px; gap: 16px; } }
 </style>

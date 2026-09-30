@@ -118,7 +118,7 @@ const recentPosts = posts
     left: 50%;
     z-index: 10;
     display: flex;
-    width: min(560px, 48vw);
+    width: min(760px, calc(100% - 64px));
     align-items: center;
     justify-content: space-between;
     transform: translateX(var(--nav-offset));
@@ -128,7 +128,7 @@ const recentPosts = posts
     padding: 4px 0;
     color: #111;
     font-family: var(--mono);
-    font-size: clamp(0.68rem, 0.8vw, 0.8rem);
+    font-size: 1rem;
     font-weight: 650;
   }
   .home-nav a:first-child {
@@ -518,10 +518,13 @@ const recentPosts = posts
       top: 16px;
       left: 50%;
       width: calc(100% - 28px);
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 20px;
       transform: translateX(var(--nav-offset));
     }
     .home-nav a {
-      font-size: clamp(0.62rem, 2.2vw, 0.78rem);
+      font-size: .875rem;
     }
     .home-nav a:first-child {
       color: #111;
