@@ -7,10 +7,23 @@ const date = new Date(frontmatter.pubDate);
 const duplicateTitle = headings[0]?.depth === 1 && headings[0]?.text === frontmatter.title;
 ---
 <BaseLayout title={`${frontmatter.title} — Miyuki`} description={frontmatter.description} theme="dark">
+  <script slot="head" is:inline>
+    try {
+      document.documentElement.dataset.articleTheme = localStorage.getItem("miyuki-article-theme") === "light" ? "light" : "dark";
+    } catch {
+      document.documentElement.dataset.articleTheme = "dark";
+    }
+  </script>
   <div class="document-page">
     <article class="article-shell">
       <header class="article-header">
-        <a class="back" href="/blog/">← 全部文章</a>
+        <div class="article-tools">
+          <a class="back" href="/blog/">← 全部文章</a>
+          <fieldset class="article-theme" aria-label="文章配色" hidden>
+            <label><input type="radio" name="article-theme" value="dark" checked /><span>深色</span></label>
+            <label><input type="radio" name="article-theme" value="light" /><span>白色</span></label>
+          </fieldset>
+        </div>
         <div class="article-meta">
           <time datetime={date.toISOString()}>{date.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}</time>
           <div class="article-tags">{frontmatter.tags?.map((tag: string) => <span>{tag}</span>)}</div>
@@ -48,6 +61,15 @@ const duplicateTitle = headings[0]?.depth === 1 && headings[0]?.text === frontma
   .article-shell { position: relative; width: min(760px, calc(100% - 48px)); margin: 0 auto; padding: 56px 0 80px; }
   .article-header { margin-bottom: 48px; }
   .article-header .back { display: inline-flex; padding: 8px 0; margin-bottom: 32px; color: #7ef9ff; font-size: .875rem; }
+  .article-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 32px; }
+  .article-tools .back { margin-bottom: 0; }
+  .article-theme { display: flex; min-width: 0; gap: 2px; margin: 0; padding: 3px; border: 1px solid #28313b; border-radius: 6px; }
+  .article-theme[hidden] { display: none; }
+  .article-theme label { position: relative; cursor: pointer; }
+  .article-theme input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .article-theme span { display: block; min-width: 56px; padding: 6px 10px; border-radius: 3px; color: #a7afb9; font-size: .8125rem; line-height: 1.5; text-align: center; }
+  .article-theme input:checked + span { background: #1d2830; color: #7ef9ff; }
+  .article-theme input:focus-visible + span { outline: 2px solid #7ef9ff; outline-offset: 2px; }
   .article-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 16px 24px; padding-top: 20px; border-top: 1px solid rgba(126,249,255,.3); box-shadow: 0 -6px 12px -12px #7ef9ff; font-family: var(--mono); font-size: .75rem; color: #a7afb9; }
   .article-tags { display: flex; flex-wrap: wrap; gap: 8px 14px; min-width: 0; }
   .article-tags span { color: #e8a3d0; overflow-wrap: anywhere; }
@@ -104,6 +126,41 @@ const duplicateTitle = headings[0]?.depth === 1 && headings[0]?.text === frontma
   .copy-icon { position: relative; display: block; width: 12px; height: 14px; border: 1px solid currentColor; }
   .copy-icon::before { position: absolute; top: -4px; left: -4px; width: 9px; height: 11px; border-top: 1px solid currentColor; border-left: 1px solid currentColor; content: ""; }
   .copy-status { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  html:has(.document-page) { color-scheme: dark; }
+  html:not([data-article-theme="light"]) .document-page .astro-code,
+  html:not([data-article-theme="light"]) .document-page .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+  }
+  html[data-article-theme="light"]:has(.document-page) {
+    color-scheme: light;
+    background: #fff;
+    & body, & .document-page { background: #fff; color: #303842; }
+    & .site-header.dark { background: #fff; color: #18212b; border-color: #dce3e8; }
+    & .site-footer { background: #fff; color: #596672; border-color: #dce3e8; }
+    & .article-header h1, & .article-body :is(h1,h2,h3,h4,h5,h6,strong) { color: #18212b; }
+    & .article-header > p, & .article-meta, & .article-end, & .toc-sticky h2, & .document-page nav a { color: #596672; }
+    & .article-meta { border-color: #99d8dd; box-shadow: none; }
+    & .article-tags span { color: #9f2675; }
+    & .article-tags span::before { color: #b42a82; }
+    & .document-page a, & .article-body li::marker, & .mobile-toc summary,
+    & .document-page nav a[aria-current="location"] { color: #087783; }
+    & .document-page a:hover { color: #005964; text-shadow: 0 0 10px rgba(8,119,131,.15); }
+    & .article-body a { text-decoration-color: #8ecbd1; }
+    & .document-page :is(a,button,summary):focus-visible { outline-color: #087783; }
+    & .article-body h2, & .article-body hr, & .article-end, & .toc-sticky,
+    & .mobile-toc, & .article-body :is(th,td), & .article-theme { border-color: #dce3e8; }
+    & .article-body :not(pre) > code { background: #f5f4f7; border-color: #e0dce5; color: #9f2675; }
+    & .article-body pre, & .code-toolbar { border-color: #b8dce0; box-shadow: 0 0 14px rgba(8,119,131,.04); }
+    & .article-body blockquote { color: #596672; border-color: #1595a1; }
+    & .article-body th, & .code-toolbar { background: #f2f6f8; color: #18212b; }
+    & .article-body input[type="checkbox"] { accent-color: #087783; }
+    & .copy-code, & .article-theme span { color: #596672; }
+    & .copy-code:hover, & .article-theme input:checked + span { color: #087783; background: #e5f3f5; }
+    & .article-theme input:focus-visible + span { outline-color: #087783; }
+    & .copy-code[data-copied] { color: #087783; }
+  }
+  .copy-code[data-copied] { color: #7ef9ff; }
   @media (max-width: 1279px) { .desktop-toc { display: none; } .mobile-toc { display: block; } }
   @media (max-width: 720px) {
     .article-shell { width: calc(100% - 32px); padding: 36px 0 56px; }
@@ -122,6 +179,19 @@ const duplicateTitle = headings[0]?.depth === 1 && headings[0]?.text === frontma
     const article = document.querySelector<HTMLElement>(".article-shell");
     if (!article) return;
     const controller = new AbortController();
+    const themeControl = article.querySelector<HTMLFieldSetElement>(".article-theme");
+    const themeInputs = Array.from(article.querySelectorAll<HTMLInputElement>('input[name="article-theme"]'));
+    function applyTheme(theme: string) {
+      document.documentElement.dataset.articleTheme = theme === "light" ? "light" : "dark";
+      themeInputs.forEach((input) => { input.checked = input.value === document.documentElement.dataset.articleTheme; });
+    }
+    applyTheme(document.documentElement.dataset.articleTheme ?? "dark");
+    if (themeControl) themeControl.hidden = false;
+    themeInputs.forEach((input) => input.addEventListener("change", () => {
+      if (!input.checked) return;
+      applyTheme(input.value);
+      try { localStorage.setItem("miyuki-article-theme", input.value); } catch {}
+    }, { signal: controller.signal }));
     const timers = new Set<ReturnType<typeof setTimeout>>();
     const status = article.querySelector<HTMLElement>(".copy-status");
 
@@ -157,7 +227,7 @@ const duplicateTitle = headings[0]?.depth === 1 && headings[0]?.text === frontma
           if (controller.signal.aborted) return;
           button.title = "已复制";
           if (status) status.textContent = "代码已复制";
-          button.style.color = "#7ef9ff";
+          button.setAttribute("data-copied", "");
         } catch {
           if (controller.signal.aborted) return;
           button.title = "复制失败，请手动选择代码";
@@ -165,7 +235,7 @@ const duplicateTitle = headings[0]?.depth === 1 && headings[0]?.text === frontma
         } finally {
           button.disabled = false;
         }
-        const timer = setTimeout(() => { button.title = "复制代码"; button.style.color = ""; timers.delete(timer); }, 2000);
+        const timer = setTimeout(() => { button.title = "复制代码"; button.removeAttribute("data-copied"); timers.delete(timer); }, 2000);
         timers.add(timer);
       }, { signal: controller.signal });
     });
