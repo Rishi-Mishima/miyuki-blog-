@@ -1,8 +1,19 @@
 ---
 import { navigationLinks } from "../config/navigation";
+
+const normalizePath = (path: string) => {
+  const withLeadingSlash = path.startsWith("/") ? path : `/${path}`;
+  return withLeadingSlash.endsWith("/") ? withLeadingSlash : `${withLeadingSlash}/`;
+};
+
+const currentPath = normalizePath(Astro.url.pathname);
+const visibleLinks = navigationLinks.filter((link) => {
+  const href = normalizePath(link.href);
+  return currentPath !== href && !currentPath.startsWith(href);
+});
 ---
 <nav aria-label="主导航">
-  {navigationLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+  {visibleLinks.map((link) => <a href={link.href}>{link.label}</a>)}
 </nav>
 <style>
   nav { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 28px; }

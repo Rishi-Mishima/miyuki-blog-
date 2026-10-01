@@ -1,0 +1,22 @@
+---
+import SectionOverview from "../components/SectionOverview.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="AI实验室 — Miyuki"
+  description="Miyuki 关于人工智能、模型实验和产品化思考的记录。"
+>
+  <SectionOverview
+    kicker="AI Lab"
+    meta="models / agents / products"
+    title="AI"
+    accent="实验室"
+    intro="这个分区用来放模型原理、智能体实验、AI 产品体验和工具链观察。目标是把抽象技术拆成可以运行、可以比较、可以继续迭代的小实验。"
+    items={[
+      { index: "01", title: "模型理解", description: "从推理、训练到评测，把大模型系统拆成更容易检查的部件。" },
+      { index: "02", title: "智能体实验", description: "围绕任务规划、工具调用、记忆和上下文管理，记录真实可运行的尝试。" },
+      { index: "03", title: "产品观察", description: "分析 AI 功能如何进入具体工作流，以及它们改变了哪些交互习惯。" },
+    ]}
+  />
+</BaseLayout>

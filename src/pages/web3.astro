@@ -1,0 +1,22 @@
+---
+import SectionOverview from "../components/SectionOverview.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Web3 & 一切我感兴趣的 — Miyuki"
+  description="Miyuki 关于 Web3、金融、商业和自由探索主题的记录。"
+>
+  <SectionOverview
+    kicker="Web3 & Interests"
+    meta="finance / culture / systems"
+    title="Web3"
+    accent="和兴趣档案"
+    intro="这里是更开放的探索空间：Web3、金融、商业、文化和任何暂时还没有固定分类但值得继续追踪的问题。"
+    items={[
+      { index: "01", title: "Web3", description: "关注链上产品、激励机制、社区协作和基础设施的真实使用场景。" },
+      { index: "02", title: "商业与金融", description: "整理公司、市场、产品策略和个人财务系统中的长期变量。" },
+      { index: "03", title: "自由研究", description: "保存那些还没成体系、但已经开始发光的兴趣线索。" },
+    ]}
+  />
+</BaseLayout>
