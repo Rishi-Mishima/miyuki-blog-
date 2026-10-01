@@ -1,22 +1,5 @@
 ---
-import SectionOverview from "../components/SectionOverview.astro";
-import BaseLayout from "../layouts/BaseLayout.astro";
+import ArticleArchive from "../components/ArticleArchive.astro";
 ---
 
-<BaseLayout
-  title="成为CS工程师 — Miyuki"
-  description="Miyuki 关于计算机科学、软件工程和工程师成长的记录。"
->
-  <SectionOverview
-    kicker="CS Engineer"
-    meta="systems / craft / career"
-    title="成为"
-    accent="CS工程师"
-    intro="这里整理我从基础能力、工程实践到长期职业系统的学习路线。关注能真正写进日常工作流的知识，而不是只停在概念里的笔记。"
-    items={[
-      { index: "01", title: "计算机基础", description: "算法、网络、操作系统与数据库的核心概念，用可复用的方式持续补齐。" },
-      { index: "02", title: "工程实践", description: "从代码质量、测试、部署到协作习惯，把项目交付能力变成稳定肌肉。" },
-      { index: "03", title: "成长系统", description: "记录求职、复盘、公开写作与长期学习节奏，让进步可见。" },
-    ]}
-  />
-</BaseLayout>
+<ArticleArchive />
