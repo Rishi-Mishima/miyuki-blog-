@@ -1,0 +1,41 @@
+---
+import { ArrowUpRight } from "@lucide/astro";
+import type { Post } from "../data/posts";
+interface Props { posts: Post[]; }
+const { posts } = Astro.props;
+---
+<ol class="post-list">
+  {posts.map((post, index) => (
+    <li>
+      <a class="post-row" href={post.url}>
+        <span class="post-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+        <time datetime={post.date.toISOString()}>{post.date.toISOString().slice(0, 10).replaceAll("-", ".")}</time>
+        <div class="post-main">
+          <h3>{post.title}</h3>
+          <p>{post.description}</p>
+          <div class="tag-list" aria-label="文章标签">{post.tags.map((tag) => <span>{tag}</span>)}</div>
+        </div>
+        <ArrowUpRight class="post-arrow" size={24} stroke-width={1.4} aria-hidden="true" />
+      </a>
+    </li>
+  ))}
+</ol>
+<style>
+  .post-list { margin: 0; padding: 0; border-top: 1px solid var(--line); list-style: none; }
+  .post-row { display: grid; grid-template-columns: 40px 120px minmax(0, 1fr) 28px; align-items: start; gap: 28px; padding: 32px 8px; border-bottom: 1px solid var(--line); transition: background .18s ease, border-color .18s ease; }
+  .post-row:hover, .post-row:focus-visible { background: var(--surface); border-color: var(--accent); }
+  .post-number { color: var(--accent); font: .75rem/2 var(--mono); }
+  time { color: var(--muted); font: .75rem/2 var(--mono); }
+  h3 { margin: 0; font-size: 1.5rem; line-height: 1.35; font-weight: 550; overflow-wrap: anywhere; }
+  p { margin: 10px 0 16px; color: var(--muted); font-size: .875rem; line-height: 1.7; overflow-wrap: anywhere; }
+  .post-arrow { color: var(--accent); transition: transform .18s ease; }
+  .post-row:hover .post-arrow { transform: translate(3px, -3px); }
+  @media (max-width: 760px) {
+    .post-row { grid-template-columns: 26px minmax(0, 1fr) 24px; gap: 12px; padding: 24px 0; }
+    time { grid-column: 2; grid-row: 1; }
+    .post-number { grid-column: 1; grid-row: 1; }
+    .post-main { grid-column: 2; grid-row: 2; }
+    .post-arrow { grid-column: 3; grid-row: 1; }
+    h3 { font-size: 1.125rem; }
+  }
+</style>

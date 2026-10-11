@@ -8,9 +8,9 @@ const { theme = "light" } = Astro.props;
   <Navigation />
 </header>
 <style>
-  .site-header { position: relative; z-index: 20; display: flex; min-height: 72px; align-items: center; justify-content: space-between; gap: 28px; padding: 0 32px; border-bottom: 1px solid var(--ink); background: var(--paper); }
-  .site-header.dark { color: var(--white); border-color: rgba(255,255,255,.35); background: var(--ink); }
-  .wordmark { display: inline-flex; flex-shrink: 0; align-items: center; gap: 10px; font-size: 1.125rem; font-weight: 900; letter-spacing: 0; }
-  .wordmark-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); border: 1px solid var(--ink); }
-  @media (max-width: 720px) { .site-header { min-height: 62px; flex-direction: column; padding: 16px 14px; gap: 12px; } }
+  .site-header { position: relative; z-index: 20; display: flex; width: min(1180px, calc(100% - 96px)); margin: 0 auto; min-height: 80px; align-items: center; justify-content: space-between; gap: 28px; padding: 16px 0; border-bottom: 1px solid var(--line); background: var(--paper); color: var(--ink); }
+  .wordmark { display: inline-flex; flex-shrink: 0; align-items: center; gap: 10px; font-family: var(--mono); font-size: .875rem; font-weight: 700; }
+  .wordmark-dot { width: 7px; height: 7px; background: var(--accent); box-shadow: 0 0 8px #c2ff6230; }
+  @media (max-width: 900px) { .site-header { flex-wrap: wrap; gap: 16px; } }
+  @media (max-width: 760px) { .site-header { width: calc(100% - 40px); gap: 12px; padding: 20px 0; } }
 </style>

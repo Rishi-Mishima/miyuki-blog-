@@ -19,17 +19,16 @@
   .pixel-cursor svg {
     display: block;
     overflow: visible;
-    filter: drop-shadow(0 0 3px rgba(126, 249, 255, 0.55));
+    filter: drop-shadow(0 0 2px #c2ff6230);
   }
-  .cursor-fill { fill: #eefcff; }
+  .cursor-fill { fill: var(--ink); }
   .pixel-cursor-trail { z-index: 9998; }
   .pixel-cursor-trail span {
     display: block;
-    width: 40px;
-    height: 40px;
-    border: 1px solid rgba(18, 187, 201, 0.65);
-    background: rgba(126, 249, 255, 0.035);
-    box-shadow: 0 0 12px rgba(18, 187, 201, 0.2), inset 0 0 10px rgba(18, 187, 201, 0.1);
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--accent);
+    background: transparent;
     transform: translate(-50%, -50%);
     transition: width 0.15s ease, height 0.15s ease, border-color 0.15s ease;
   }
@@ -38,13 +37,13 @@
     :global(html.pixel-cursor-visible *) { cursor: none !important; }
     :global(html.pixel-cursor-visible) .pixel-cursor,
     :global(html.pixel-cursor-visible) .pixel-cursor-trail { display: block; }
-    :global(html.pixel-cursor-hover) .cursor-fill { fill: #7ef9ff; }
+    :global(html.pixel-cursor-hover) .cursor-fill { fill: var(--accent); }
     :global(html.pixel-cursor-hover) .pixel-cursor-trail span {
-      width: 52px;
-      height: 52px;
-      border-color: #d227a0;
+      width: 36px;
+      height: 36px;
+      border-color: var(--pink);
     }
-    :global(html.pixel-cursor-down) .cursor-fill { fill: #ffdd6b; }
+    :global(html.pixel-cursor-down) .cursor-fill { fill: var(--cyan); }
   }
   @media (prefers-reduced-motion: reduce) {
     :global(html.pixel-cursor-visible) .pixel-cursor-trail { display: none; }

@@ -16,9 +16,10 @@ const visibleLinks = navigationLinks.filter((link) => {
   {visibleLinks.map((link) => <a href={link.href}>{link.label}</a>)}
 </nav>
 <style>
-  nav { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 28px; }
-  a { position: relative; padding: 6px 0; font-size: 1rem; font-weight: 750; white-space: nowrap; }
+  nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; }
+  a { position: relative; padding: 8px 0; color: var(--muted); font-size: .8125rem; line-height: 1.6; transition: color .18s ease; }
+  a:hover, a:focus-visible { color: var(--accent); }
   a::after { position: absolute; right: 0; bottom: 0; left: 0; height: 1px; background: currentColor; content: ""; transform: scaleX(0); transform-origin: right; transition: transform .2s ease; }
   a:hover::after, a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
-  @media (max-width: 720px) { nav { justify-content: center; gap: 8px 20px; } a { font-size: .875rem; } }
+  @media (max-width: 760px) { nav { gap: 0 20px; } a { font-size: .75rem; } }
 </style>
