@@ -6,7 +6,7 @@ import ContactLinks from "../components/ContactLinks.astro";
   <section class="inner-page about">
     <div class="page-kicker"><p class="eyebrow">~/miyuki/about/</p><span>Based in Amsterdam</span></div>
     <div class="about-grid">
-      <figure class="portrait"><img src="/images/miyuki-portrait-transparent.png" alt="Miyuki 的蓝发卡通头像" width="1200" height="1200" /><figcaption>MIYUKI / FINANCE · AI · SYSTEMS</figcaption></figure>
+      <figure class="portrait"><img src="/images/miyuki-portrait.jpg" alt="粉色背景的动漫人物侧脸，Miyuki 的个人头像" width="560" height="581" /><figcaption>MIYUKI / FINANCE · AI · SYSTEMS</figcaption></figure>
       <div class="about-copy">
         <p class="eyebrow">About / 关于我</p>
         <h1>你好，<br />我是 <em>Miyuki.</em></h1>
@@ -26,7 +26,7 @@ import ContactLinks from "../components/ContactLinks.astro";
 <style>
   .about-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 80px; align-items: center; padding: 64px 0 80px; }
   .portrait { margin: 0; }
-  .portrait img { width: 100%; aspect-ratio: 1; object-fit: contain; }
+  .portrait img { width: 100%; aspect-ratio: 560 / 581; object-fit: contain; }
   figcaption { margin-top: 24px; text-align: center; color: var(--muted); font: .6875rem var(--mono); }
   h1 { margin: 24px 0 28px; font-size: 3.75rem; font-weight: 500; line-height: 1.2; }
   h1 em { color: var(--accent); font-family: var(--serif); font-weight: 400; }
