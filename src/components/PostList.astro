@@ -4,7 +4,7 @@ import type { Post } from "../data/posts";
 interface Props { posts: Post[]; }
 const { posts } = Astro.props;
 ---
-<ol class="post-list">
+{posts.length === 0 ? <p class="empty-posts">这里还没有文章。</p> : <ol class="post-list">
   {posts.map((post, index) => (
     <li>
       <a class="post-row" href={post.url}>
@@ -19,8 +19,9 @@ const { posts } = Astro.props;
       </a>
     </li>
   ))}
-</ol>
+</ol>}
 <style>
+  .empty-posts { margin: 0; padding: 32px 0; border-block: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
   .post-list { margin: 0; padding: 0; border-top: 1px solid var(--line); list-style: none; }
   .post-row { display: grid; grid-template-columns: 40px 120px minmax(0, 1fr) 28px; align-items: start; gap: 28px; padding: 32px 8px; border-bottom: 1px solid var(--line); transition: background .18s ease, border-color .18s ease; }
   .post-row:hover, .post-row:focus-visible { background: var(--surface); border-color: var(--accent); }

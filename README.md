@@ -1,43 +1,44 @@
-# Astro Starter Kit: Minimal
+# Miyuki Blog
+
+A static Astro blog. Node.js >= 22.12.0 is required.
+
+## Development
+
+Run `npm install` to install dependencies. Start a local preview only when needed:
 
 ```sh
-npm create astro@latest -- --template minimal
+npm run dev -- --background
+npm run astro -- dev status
+npm run astro -- dev logs
+npm run astro -- dev stop
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Run `npm run build` to generate the site in `dist/`.
 
-## 🚀 Project Structure
+## Writing
 
-Inside of your Astro project, you'll see the following folders and files:
+Copy `docs/post-template.md` to `src/pages/posts/your-post-slug.md` and edit its metadata and Markdown body. The filename becomes `/posts/your-post-slug/`.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+Required metadata: `title`, `description`, `pubDate` (YYYY-MM-DD), `category`, and `layout`. Keep the template's layout path. Tags are optional.
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+| Category | Archive |
+| --- | --- |
+| `cs-engineer` | `/cs-engineer/` |
+| `ai-lab` | `/ai-lab/` |
+| `web3` | `/web3/` |
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Posts appear automatically in their category, the full archive, and the homepage's latest posts, sorted by publication date. An invalid category or date fails the build so an article cannot silently disappear from its category.
 
-Any static assets, like images, can be placed in the `public/` directory.
+Keep unfinished drafts outside `src/pages`, for example in `drafts/`. Every Markdown article in `src/pages/posts/` is published when the site is built; a future date does not schedule publication. The tutorial posts are preserved in `docs/examples/` and are not published. The two initial Web3 notes are generated starter content based on linked references and can be edited or replaced.
 
-## 🧞 Commands
+Place article images in `public/images/posts/` and reference them as `/images/posts/filename.jpg` in Markdown.
 
-All commands are run from the root of the project, from a terminal:
+## Contact
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Update `src/config/profile.ts` to change the GitHub profile or set a public email address. An empty email hides the email link.
 
-## 👀 Want to learn more?
+## Publishing
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+After reviewing an article, run `npm run build`, then commit and push its Markdown file and images. A Git-connected hosting service can rebuild from `main` automatically.
+
+For Netlify, use `npm run build`, publish `dist`, and set `NODE_VERSION=24`. No database or server adapter is needed for the current static site.

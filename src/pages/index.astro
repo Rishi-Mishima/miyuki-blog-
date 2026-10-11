@@ -40,11 +40,6 @@ const directoryMeta = ["code / systems / learning", "models / agents / experimen
 
     <section class="recent-section" aria-labelledby="recent-title">
       <div class="section-heading"><div><p class="eyebrow">02 / Writing</p><h2 id="recent-title">写作与研究。</h2></div><a href="/blog/" class="text-link">全部文章 <ArrowUpRight size={16} aria-hidden="true" /></a></div>
-      <a class="series-feature" href="/blog/">
-        <div class="series-label"><span class="eyebrow">Featured series</span><span class="series-status">已完结</span></div>
-        <div class="series-copy"><h3>从零手写大模型</h3><p>从模型推理到训练基础。</p><div class="series-chapters"><span>推理篇 <strong>15</strong> 期</span><span>训练篇 <strong>5</strong> 期</span></div></div>
-        <ArrowUpRight size={28} stroke-width={1.4} aria-hidden="true" />
-      </a>
       <p class="notes-label">最新文章</p>
       <PostList posts={posts.slice(0, 3)} />
     </section>
@@ -137,16 +132,6 @@ const directoryMeta = ["code / systems / learning", "models / agents / experimen
   .directory-row svg { color: var(--accent); transition: transform .18s ease; }
   .directory-row:hover svg { transform: translate(3px, -3px); }
   .recent-section { padding: 56px 0 64px; border-top: 1px solid var(--line); }
-  .series-feature { display: grid; grid-template-columns: 1fr 1.8fr 28px; gap: 32px; padding: 32px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-  .series-label { display: flex; flex-direction: column; align-items: start; gap: 16px; }
-  .series-status { color: var(--pink); font: .6875rem var(--mono); }
-  .series-copy h3 { margin: 0 0 12px; font-size: 1.75rem; font-weight: 500; overflow-wrap: anywhere; }
-  .series-copy p { margin: 0; color: var(--muted); font-size: .875rem; line-height: 1.8; }
-  .series-chapters { display: flex; flex-wrap: wrap; gap: 16px 32px; margin-top: 24px; color: var(--cyan); font-size: .8125rem; }
-  .series-chapters strong { margin: 0 6px; font: 1.5rem var(--mono); }
-  .series-feature > svg { color: var(--accent); transition: transform .2s ease; }
-  .series-feature:hover > svg { transform: translate(3px, -3px); }
-  .series-feature:hover h3 { color: var(--accent); }
   .notes-label { margin: 32px 0 16px; color: var(--muted); font-size: .75rem; }
   .connect-section { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; padding: 40px 0 56px; border-top: 1px solid var(--line); }
   .connect-section h2 { margin: 16px 0 0; font-size: 1.75rem; font-weight: 500; }
@@ -177,11 +162,6 @@ const directoryMeta = ["code / systems / learning", "models / agents / experimen
     .directory-row { gap: 12px; min-height: 180px; padding: 22px 0; grid-template-columns: 20px minmax(0, 1fr) 24px; }
     .directory-row h3 { font-size: 1.125rem; }
     .recent-section { padding: 40px 0; }
-    .series-feature { grid-template-columns: minmax(0, 1fr) 28px; gap: 24px 12px; }
-    .series-label { grid-column: 1; flex-direction: row; align-items: center; flex-wrap: wrap; }
-    .series-copy { grid-column: 1; grid-row: 2; }
-    .series-copy h3 { font-size: 1.375rem; }
-    .series-feature > svg { grid-column: 2; grid-row: 1; }
   }
   @media (prefers-reduced-motion: reduce) {
     .scroll-ready .directory-row { opacity: 1; }

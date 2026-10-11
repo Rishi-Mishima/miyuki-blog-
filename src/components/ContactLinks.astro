@@ -1,9 +1,10 @@
 ---
 import { ArrowUpRight, Mail } from "@lucide/astro";
+import { profile } from "../config/profile";
 ---
 <div class="contact-links">
-  <a class="text-link" href="mailto:hello@example.com"><Mail size={16} aria-hidden="true" /> Email <ArrowUpRight size={14} aria-hidden="true" /></a>
-  <a class="text-link" href="https://github.com/" rel="noreferrer">GitHub <ArrowUpRight size={14} aria-hidden="true" /></a>
+  {profile.email && <a class="text-link" href={`mailto:${profile.email}`}><Mail size={16} aria-hidden="true" /> Email <ArrowUpRight size={14} aria-hidden="true" /></a>}
+  <a class="text-link" href={profile.github} rel="noreferrer">GitHub <ArrowUpRight size={14} aria-hidden="true" /></a>
 </div>
 <style>
   .contact-links { display: flex; flex-wrap: wrap; gap: 12px 28px; }
